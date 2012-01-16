@@ -59,6 +59,7 @@ class Boost < Formula
             "--libdir=#{lib}",
             "-j#{ENV.make_jobs}",
             "--layout=tagged",
+            "--python-version=2.7",
             "--user-config=user-config.jam",
             "threading=multi",
             "install"]
