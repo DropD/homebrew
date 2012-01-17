@@ -7,9 +7,8 @@ class Alps < Formula
   md5 '18a3e859eb0775aadf0a65d26d22a51c'
   version '2.0.2'
 
-  depends_on 'cmake'
+  depends_on 'cmake' => :build
   depends_on 'hdf5' # needs 1.8.2 or higher, as of now, formula is 1.8.7
-  depends_on 'python'
   depends_on 'numpy' => :python
   depends_on 'scipy' => :python
   depends_on 'matplotlib' => :python
@@ -22,7 +21,7 @@ class Alps < Formula
     ["--without-tests", "Don't build ALPS tests."],
     ["--with-fortran", "Build ALPS Fortran Binaries (currently TEBD)."],
     ["--without-mpi", "Disable MPI parallelization in ALPS."],
-    ["--with-openmp", "Enable OpenMP parallelization in ALPS."],
+    ["--with-omp", "Enable OpenMP parallelization in ALPS."],
     ["--without-shared", "Don't build the ALPS shared libraries."],
   ]
   end
@@ -49,6 +48,9 @@ class Alps < Formula
       if ARGV.include? "--with-omp"
         args << "DALPS_Fortran_FLAGS='-fopenmp'"
       end
+    end
+    if ARGV.include? "--without-mpi"
+      args << "DALPS_ENABLE_MPI=OFF"
     end
     if ARGV.include? "--with-omp"
       args << "DALPS_ENABLE_OPENMP=ON"
