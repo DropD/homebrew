@@ -8,10 +8,8 @@ class Alps < Formula
   version '2.0.2'
 
   depends_on 'cmake' => :build
+  depends_on 'boost'
   depends_on 'hdf5' # needs 1.8.2 or higher, as of now, formula is 1.8.7
-  depends_on 'numpy' => :python
-  depends_on 'scipy' => :python
-  depends_on 'matplotlib' => :python
 
   def options
   [
@@ -26,10 +24,18 @@ class Alps < Formula
   ]
   end
 
+  def caveats
+      return <<-EOS
+        Note: for python support without VisTrails, you will need the following python packages:
+            * numpy
+            * scipy
+            * matplotlib
+        Look at the homepage to learn more about how to use ALPS with VisTrails.
+      EOS
+  end
+
   def install
-    args = std_cmake_parameters.split + [
-    #    "-D Boost_ROOT_DIR:PATH=#{HOMEBREW_PREFIX}/Cellar/boost/1.47.0"
-    ]
+    args = std_cmake_parameters.split
     test_bool = true
 
     if ARGV.include? "--without-applications"
@@ -73,10 +79,10 @@ class Alps < Formula
       end
       system "make install"
     end
-    Dir.chdir "#{prefix}/bin" do
+    Dir.chdir "#{bin}" do
       system "chmod 755 *"
     end
-    Dir.chdir "#{prefix}/lib/python/alps" do
+    Dir.chdir "#{lib}/python/alps" do
       system "chmod 755 *"
     end
   end
