@@ -30,6 +30,7 @@ class Alps < Formula
     args = std_cmake_parameters.split + [
     #    "-D Boost_ROOT_DIR:PATH=#{HOMEBREW_PREFIX}/Cellar/boost/1.47.0"
     ]
+    test_bool = true
 
     if ARGV.include? "--without-applications"
       args << "-DALPS_BUILD_APPLICATIONS=OFF"
@@ -42,6 +43,7 @@ class Alps < Formula
     end
     if ARGV.include? "--without-tests"
       args << "DALPS_BUILD_TESTS=OFF"
+      test_bool = false
     end
     if ARGV.include? "--with-fortran"
       args << "DALPS_BUILD_FORTRAN=ON"
@@ -65,20 +67,22 @@ class Alps < Formula
     Dir.chdir 'build' do
       system "cmake", *args
       system "make"
-      #if ARGV.include? "--without-tests"
-      #else
-      #    system "make test"
-      #end
+      if ARGV.include? "--without-tests"
+      else
+          system "make test"
+      end
       system "make install"
+    end
+    Dir.chdir "#{prefix}/bin" do
+      system "chmod 755 *"
+    end
+    Dir.chdir "#{prefix}/lib/python/alps" do
+      system "chmod 755 *"
     end
   end
 
   def test
-    # This test will fail and we won't accept that! It's enough to just
-    # replace "false" with the main program this formula installs, but
-    # it'd be nice if you were more thorough. Test the test with
-    # `brew test alps`. Remove this comment before submitting
-    # your pull request!
-    system "make test"
+    ohai "testing was included in the build process,"
+    ohai "provided you didn't build with --without-tests."
   end
 end
